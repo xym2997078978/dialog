@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <style>
+        #mark{ 
+            width:100%;
+            height:100%;
+            background:rgba(0, 0, 0, 0.5);
+            position:fixed;
+            top:0;
+            left:0;
+        }
+        #box{
+            width:300px;
+            height:200px;
+            background:#fff;
+            position:absolute;
+            margin:200px 400px;
+            text-align:center;
+        }
+        button{
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+<input type="button" id="btn" value="点击">
+    <script>
+        function dialog(obj){
+            this.obj=obj;
+            this.btn = document.getElementById(this.obj.btnId);
+            this.btns = document.getElementsByTagName(this.obj.button);
+            this.alert();
+        }
+        dialog.prototype={
+            constructor:dialog,
+            alert:function(){
+                var that=this;
+                this.btn.onclick=function(){
+                    var mark = document.createElement('div');
+                    mark.id='mark';
+                    document.body.appendChild(mark);
+                    var box = document.createElement('div');
+                    box.id='box';
+                    box.innerHTML='<p>'+that.obj.content+'</p><button>'+that.obj.btns[0]+'</button><button>'+that.obj.btns[1]+'</button>';
+                    document.body.appendChild(box);
+                    that.click();
+                }
+            },
+            click:function(){
+                var that=this;
+                this.btns[0].onclick=function(){
+                    document.body.removeChild(mark);
+                    document.body.removeChild(box);
+                    that.obj.successCallback();
+                }
+                this.btns[1].onclick=function(){
+                    document.body.removeChild(mark);
+                    document.body.removeChild(box);
+                    that.obj.cancelCallback();
+                }
+            }
+        }
+        new dialog({
+            btnId:'btn',
+            markId:'mark',
+            button:'button',
+            content:"确定退出吗？",
+            btns:["确认","取消"],
+            successCallback:function(){
+                location.href=''
+            },
+            cancelCallback:function(){
+                location.href=''
+            } 
+        })
+    </script>
+</body>
+</html>
